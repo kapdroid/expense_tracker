@@ -32,10 +32,21 @@ class _ExpenseState extends State<Expenses> {
 
   void openAddExpenseBottomSheet() {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
-        builder: (ctx) => const AddExpense());
+        builder: (ctx) => AddExpense(addExpense));
   }
 
+  void addExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
+void removeExpense(Expense expense){
+  setState(() {
+    _registeredExpenses.remove(expense);
+  });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +62,7 @@ class _ExpenseState extends State<Expenses> {
         body: Column(
           children: [
             const Text("Expense Tracker"),
-            ExpenseList(_registeredExpenses)
+            ExpenseList(_registeredExpenses,removeExpense)
           ],
         ));
   }

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AddExpense extends StatefulWidget {
-  const AddExpense({super.key});
+  const AddExpense(Function(Expense) this.onAdd, {super.key});
+
+  final void Function(Expense) onAdd;
 
   @override
   State<AddExpense> createState() {
@@ -139,6 +141,12 @@ class _AddExpenseState extends State<AddExpense> {
         ),
       );
     }
+    widget.onAdd(Expense(
+        title: _textEditingController.text,
+        amount: double.parse(_amoutEditingController.text),
+        dateTime: _selectedDate!,
+        category: _selectedCategory));
+    Navigator.pop(context);
     return;
   }
 }
