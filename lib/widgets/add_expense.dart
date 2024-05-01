@@ -1,3 +1,4 @@
+import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -12,6 +13,8 @@ class AddExpense extends StatefulWidget {
 
 class _AddExpenseState extends State<AddExpense> {
   String _expenseTitle = "";
+  DateTime? _selectedDate;
+  Category _selectedCategory = Category.leisure;
 
   final _textEditingController = TextEditingController();
   final _amoutEditingController = TextEditingController();
@@ -23,12 +26,22 @@ class _AddExpenseState extends State<AddExpense> {
     super.dispose();
   }
 
-  void _selectExpenseDate() {
+  void _selectExpenseDate() async {
     final now = DateTime.now();
-    showDatePicker(
+    final pickedDate = await showDatePicker(
         context: context,
-        firstDate: DateTime(now.year-1,now.month,now.day),
+        firstDate: DateTime(now.year - 1, now.month, now.day),
         lastDate: DateTime.now());
+
+    setState(() {
+      _selectedDate = pickedDate;
+    });
+  }
+
+  void _selectCategory(Category category) {
+    setState(() {
+      _selectedCategory = category;
+    });
   }
 
   @override
@@ -63,9 +76,11 @@ class _AddExpenseState extends State<AddExpense> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Select Date"),
+                    Text(_selectedDate == null
+                        ? "No Date Selected"
+                        : formatter.format(_selectedDate!)),
                     IconButton(
-                        onPressed:_selectExpenseDate,
+                        onPressed: _selectExpenseDate,
                         icon: const Icon(Icons.calendar_month))
                   ],
                 ),
@@ -76,21 +91,54 @@ class _AddExpenseState extends State<AddExpense> {
           ),
           Row(
             children: [
+              DropdownButton(
+                  value: _selectedCategory,
+                  items: Category.values
+                      .map((item) => DropdownMenuItem(
+                            value: item,
+                            child: Text(item.name.toUpperCase()),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    _selectCategory(value as Category);
+                  }),
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child: const Text("Cancel")),
               ElevatedButton(
-                  onPressed: () {
-                    print(_textEditingController.text);
-                    print(_amoutEditingController.text);
-                  },
-                  child: const Text("Add Expense"))
+                  onPressed: validateInputs, child: const Text("Add Expense"))
             ],
           )
         ],
       ),
     );
+  }
+
+  void validateInputs() {
+    final titleValid = _textEditingController.text.trim().isNotEmpty;
+    final amountValid = _amoutEditingController.text.isNotEmpty &&
+        double.parse(_amoutEditingController.text) >= 0;
+    final dateValid = _selectedDate != null;
+    final categoryValid = _selectedCategory != null;
+    if (!(titleValid && amountValid && dateValid && categoryValid)) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Invalid Inputs"),
+          content:
+              const Text("Please enter valid date category title and amount "),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("Okay"))
+          ],
+        ),
+      );
+    }
+    return;
   }
 }
