@@ -1,4 +1,5 @@
-import 'package:expense_tracker/widgets/expense_list.dart';
+import 'package:expense_tracker/widgets/add_expense.dart';
+import 'package:expense_tracker/widgets/expense_list/expense_list.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +29,12 @@ class _ExpenseState extends State<Expenses> {
         dateTime: DateTime.now(),
         category: Category.travel)
   ];
+
+  void openAddExpenseBottomSheet() {
+    showModalBottomSheet(
+        context: context, builder: (ctx) => const AddExpense());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +42,7 @@ class _ExpenseState extends State<Expenses> {
           title: const Text("Expense Tracker"),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: openAddExpenseBottomSheet,
               icon: const Icon(Icons.add),
             )
           ],
