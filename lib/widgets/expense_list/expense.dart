@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:expense_tracker/widgets/add_expense.dart';
 import 'package:expense_tracker/widgets/expense_list/expense_list.dart';
 import 'package:expense_tracker/models/expense.dart';
@@ -42,11 +44,30 @@ class _ExpenseState extends State<Expenses> {
       _registeredExpenses.add(expense);
     });
   }
-void removeExpense(Expense expense){
-  setState(() {
-    _registeredExpenses.remove(expense);
-  });
-}
+
+  void removeExpense(Expense expense) {
+    final _removedExpense = expense;
+    final _removeExpenseIndex = _registeredExpenses.indexOf(expense);
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("Expense deleted"),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              setState(() {
+                _registeredExpenses.insert(
+                    _removeExpenseIndex, _removedExpense);
+              });
+            }),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +83,7 @@ void removeExpense(Expense expense){
         body: Column(
           children: [
             const Text("Expense Tracker"),
-            ExpenseList(_registeredExpenses,removeExpense)
+            ExpenseList(_registeredExpenses, removeExpense)
           ],
         ));
   }
