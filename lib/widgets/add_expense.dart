@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:expense_tracker/models/expense.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -200,7 +203,13 @@ class _AddExpenseState extends State<AddExpense> {
                 child: const Text("Okay"))
           ],
         ),
-      );
+      );   
+    
+      // to know platform is IOS or android  use Platform.isIOS;
+      // use instead of showDialog showCupertinoDialog(context: context, builder: builder) to show ios specific dialog
+      // and from AlertDialog to CupertinoAlertDialog
+      
+     
     }
     widget.onAdd(Expense(
         title: _textEditingController.text,
@@ -211,3 +220,5 @@ class _AddExpenseState extends State<AddExpense> {
     return;
   }
 }
+
+
