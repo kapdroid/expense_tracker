@@ -10,9 +10,10 @@ final kDarkColorScheme = ColorScheme.fromSeed(
     brightness: Brightness.dark);
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((value) => runApp(
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+    //  .then((value) => 
+      runApp(
             MaterialApp(
                 theme: ThemeData().copyWith(
                     colorScheme: kColorScheme,
@@ -49,5 +50,6 @@ void main() {
                             fontSize: 16))),
                 themeMode: ThemeMode.system,
                 home: Expenses()),
-          ));
+       //   )
+          );
 }

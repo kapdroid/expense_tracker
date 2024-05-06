@@ -34,6 +34,7 @@ class _ExpenseState extends State<Expenses> {
 
   void openAddExpenseBottomSheet() {
     showModalBottomSheet(
+        useSafeArea: true,
         isScrollControlled: true,
         context: context,
         builder: (ctx) => AddExpense(addExpense));
@@ -88,3 +89,7 @@ class _ExpenseState extends State<Expenses> {
         ));
   }
 }
+
+// MediaQuery.of(context).size.width provide width of device
+// we can use conditional rendering using width 
+// width >600 ? X : Y;
